@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>30歳になるまでにしたいことリスト</title>
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-card: #111827;
+      --bg-item: #161f33;
+      --bg-item-hover: #1e293b;
+      --border: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #818cf8;
+      --accent-emerald: #34d399;
+      --accent-gold: #fbbf24;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- Modal (Start Setup & Add Item) --- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .modal-overlay.hidden { display: none; }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      margin: auto;
+    }
+    .modal-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-card p {
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      margin: 0 0 18px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 16px; /* Prevents iOS auto-zoom on focus */
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+    .birthday-selects {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 8px;
+    }
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn-primary {
+      flex: 1;
+      padding: 11px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      border: none;
+      border-radius: 8px;
+      color: #090d16;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      padding: 11px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    /* Data Backup Section in Settings */
+    .backup-section {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+    .backup-section h3 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+    }
+    .backup-section p {
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+    }
+    .backup-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .btn-outline {
+      padding: 9px 12px;
+      background: var(--bg-main);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+    .btn-outline:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* --- Header --- */
+    .container {
+      width: 100%;
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 20px 24px 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+    .header-title {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .header-title h1 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    .header-sub {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .settings-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    .settings-btn:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+
+    /* --- 2-Column Layout --- */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr;
+      gap: 24px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    /* Left Top: Countdown */
+    .countdown-header {
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .time-box {
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+    .time-num {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .time-unit {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+    }
+
+    /* Left Bottom: Scrollable List Box + Add Button */
+    .list-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .list-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+    .scroll-area {
+      height: 390px;
+      overflow-y: auto;
+      padding-right: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .scroll-area::-webkit-scrollbar { width: 6px; }
+    .scroll-area::-webkit-scrollbar-track { background: var(--bg-main); border-radius: 4px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 32px 16px;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      font-size: 0.9rem;
+    }
+
+    /* List Item + Dynamic Urgency Styling */
+    .list-item {
+      background: var(--bg-item);
+      border: 1px solid var(--border);
+      border-left-width: 4px;
+      border-left-color: var(--urgency-color, var(--accent-cyan));
+      border-radius: 10px;
+      transition: background 0.15s, border-color 0.2s;
+    }
+    .list-item:hover {
+      background: var(--bg-item-hover);
+    }
+    .list-item.done {
+      opacity: 0.55;
+      border-left-color: var(--accent-emerald) !important;
+      background: var(--bg-item) !important;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      gap: 12px;
+      cursor: pointer;
+    }
+    .item-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent-emerald);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .item-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .item-title-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .item-title {
+      font-size: 0.94rem;
+      font-weight: 600;
+      word-break: break-word;
+    }
+    .list-item.done .item-title {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+    .deadline-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--urgency-color, var(--accent-cyan));
+      border: 1px solid var(--urgency-color, rgba(56, 189, 248, 0.3));
+    }
+    .list-item.done .deadline-badge {
+      color: var(--accent-emerald);
+      border-color: rgba(52, 211, 153, 0.3);
+    }
+
+    .item-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .difficulty-stars {
+      color: var(--accent-gold);
+      letter-spacing: 1px;
+    }
+    .memo-indicator {
+      color: var(--accent-cyan);
+    }
+
+    /* Expandable Memo & Edit Drawer */
+    .item-drawer {
+      display: none;
+      padding: 10px 14px 14px 44px;
+      border-top: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .item-drawer.open { display: block; }
+    .drawer-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .drawer-control-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+    }
+    .drawer-control-item select,
+    .drawer-control-item input {
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+    }
+    .drawer-control-item input { width: 64px; }
+
+    .item-drawer textarea {
+      width: 100%;
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 8px 10px;
+      font-size: 16px;
+      resize: vertical;
+      min-height: 62px;
+      font-family: inherit;
+    }
+    .item-drawer textarea:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+    .drawer-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+    .btn-delete {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .btn-delete:hover { color: #f87171; }
+
+    /* Bottom "+" Button */
+    .add-trigger-btn {
+      margin-top: 14px;
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-main);
+      border: 1px dashed #334155;
+      border-radius: 10px;
+      color: var(--accent-cyan);
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .add-trigger-btn:hover {
+      background: var(--bg-item);
+      border-color: var(--accent-cyan);
+    }
+    .add-trigger-btn span {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* Right Column: Clear Rate Ring */
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px 24px;
+    }
+    .ring-label-top {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+    }
+    .ring-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin-bottom: 24px;
+    }
+    .ring-container svg {
+      width: 220px;
+      height: 220px;
+      transform: rotate(-90deg);
+    }
+    .ring-track {
+      fill: none;
+      stroke: var(--bg-main);
+      stroke-width: 16;
+    }
+    .ring-bar {
+      fill: none;
+      stroke: url(#ringGradient);
+      stroke-width: 16;
+      stroke-linecap: round;
+      stroke-dasharray: 565.48;
+      stroke-dashoffset: 565.48;
+      transition: stroke-dashoffset 0.5s ease;
+    }
+    .ring-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .ring-percent {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+    .ring-fraction {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .ring-note {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* --- Mobile Responsive Adjustments --- */
+    @media (max-width: 768px) {
+      .container {
+        padding: 14px 14px 28px;
+      }
+      .main-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .card {
+        padding: 16px;
+      }
+      .time-num {
+        font-size: 1.25rem;
+      }
+      .scroll-area {
+        height: auto;
+        max-height: 420px;
+      }
+      .item-drawer {
+        padding-left: 14px;
+      }
+      .right-column {
+        padding: 20px 16px;
+        flex-direction: row;
+        justify-content: space-around;
+        text-align: left;
+        gap: 16px;
+      }
+      .ring-label-top {
+        display: none;
+      }
+      .ring-container {
+        width: 130px;
+        height: 130px;
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+      .ring-container svg {
+        width: 130px;
+        height: 130px;
+      }
+      .ring-percent {
+        font-size: 1.65rem;
+      }
+      .ring-fraction {
+        font-size: 0.75rem;
+      }
+      .form-row-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Start Setup & Data Backup Modal -->
+  <div class="modal-overlay" id="startModal">
+    <div class="modal-card">
+      <h2>プロフィール・データ設定</h2>
+      <p>なまえ・たんじょうび・最終目標年齢を入力してください。</p>
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="inputName">なまえ</label>
+          <input type="text" id="inputName" placeholder="例：タクヤ" required>
+        </div>
+        <div class="form-group">
+          <label>たんじょうび（年・月・日を選択）</label>
+          <div class="birthday-selects">
+            <select id="birthYear" required></select>
+            <select id="birthMonth" required></select>
+            <select id="birthDay" required></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputTargetAge">全体の目標年齢（何歳まで？）</label>
+          <input type="number" id="inputTargetAge" value="30" min="1" max="120" required>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">保存してスタート</button>
+        </div>
+      </form>
+
+      <!-- Backup & Restore -->
+      <div class="backup-section">
+        <h3>データの安全対策（バックアップ・移行）</h3>
+        <p>ブラウザの履歴削除によるデータ消失防止や、PC・スマホ間のデータ引き継ぎに使えます。</p>
+        <div class="backup-btns">
+          <button type="button" class="btn-outline" onclick="exportBackup()">⬇ データを書き出し</button>
+          <button type="button" class="btn-outline" onclick="document.getElementById('importFile').click()">⬆ データを読み込み</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add New Item Modal -->
+  <div class="modal-overlay hidden" id="addModal">
+    <div class="modal-card">
+      <h2>やりたいことを追加</h2>
+      <p>期限が近い項目ほど赤くなり、リストの上部に表示されます。</p>
+      <form id="addItemForm">
+        <div class="form-group">
+          <label for="newTitle">したいこと</label>
+          <input type="text" id="newTitle" placeholder="例：オーロラを見に行く" required>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label for="newTargetAge">何歳までに終わらせる？</label>
+            <input type="number" id="newTargetAge" value="30" min="1" max="120" required>
+          </div>
+          <div class="form-group">
+            <label for="newDifficulty">難易度（5段階）</label>
+            <select id="newDifficulty">
+              <option value="1">★☆☆☆☆ (1: すぐできる)</option>
+              <option value="2">★★☆☆☆ (2: 少し頑張る)</option>
+              <option value="3" selected>★★★☆☆ (3: 標準)</option>
+              <option value="4">★★★★☆ (4: 挑戦)</option>
+              <option value="5">★★★★★ (5: 大目標)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newCategory">カテゴリー</label>
+          <select id="newCategory">
+            <option value="キャリア・お金">キャリア・お金</option>
+            <option value="体験・旅行">体験・旅行</option>
+            <option value="人間関係・プライベート">人間関係・プライベート</option>
+            <option value="健康・美容・自分磨き">健康・美容・自分磨き</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="newMemo">メモ・詳細（任意）</label>
+          <textarea id="newMemo" rows="2" placeholder="具体的な計画や条件など..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeAddModal()">キャンセル</button>
+          <button type="submit" class="btn-primary">追加する</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Dashboard -->
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1 id="headerUserTitle">BUCKET LIST</h1>
+        <span class="header-sub" id="headerAgeInfo"></span>
+      </div>
+      <button class="settings-btn" onclick="openSetup()">⚙ 設定・バックアップ</button>
+    </header>
+
+    <div class="main-grid">
+      <!-- Left Column: Countdown + Scrollable List -->
+      <div class="left-column">
+        <!-- Countdown Card -->
+        <div class="card">
+          <div class="countdown-header" id="countdownLabel">30歳まで残り時間</div>
+          <div class="countdown-grid">
+            <div class="time-box"><span class="time-num" id="cdDays">0</span><span class="time-unit">DAYS</span></div>
+            <div class="time-box"><span class="time-num" id="cdHours">00</span><span class="time-unit">HOURS</span></div>
+            <div class="time-box"><span class="time-num" id="cdMins">00</span><span class="time-unit">MINS</span></div>
+            <div class="time-box"><span class="time-num" id="cdSecs">00</span><span class="time-unit">SECS</span></div>
+          </div>
+        </div>
+
+        <!-- Scrollable List Card -->
+        <div class="card list-wrapper">
+          <div class="list-box-header">
+            <span>期限が近い順に自動並び替え</span>
+            <span id="listCountLabel">0件</span>
+          </div>
+          <div class="scroll-area" id="listScrollArea"></div>
+          <button class="add-trigger-btn" onclick="openAddModal()" title="新しい項目を追加">
+            ＋ <span>新しい項目を追加</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Clear Rate Ring -->
+      <div class="card right-column">
+        <div class="ring-label-top">クリア率</div>
+        <div class="ring-container">
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#818cf8" />
+              </linearGradient>
+            </defs>
+            <circle class="ring-track" cx="100" cy="100" r="90"></circle>
+            <circle class="ring-bar" id="ringBar" cx="100" cy="100" r="90"></circle>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-percent" id="ringPercent">0%</span>
+            <span class="ring-fraction" id="ringFraction">0 / 0 達成</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight: 700; margin-bottom: 4px; display: block;" class="mobile-only-title">クリア率</div>
+          <div class="ring-note" id="ringMessage">下の「＋」ボタンから最初の目標を追加しよう</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const PROFILE_KEY = 'bucket_ring_profile_v3';
+    const ITEMS_KEY = 'bucket_ring_items_v3';
+    const CATEGORIES = ['キャリア・お金', '体験・旅行', '人間関係・プライベート', '健康・美容・自分磨き', 'その他'];
+
+    let profile = JSON.parse(localStorage.getItem(PROFILE_KEY)) || null;
+    let items = JSON.parse(localStorage.getItem(ITEMS_KEY)) || [];
+    let timerId = null;
+
+    function initBirthdayDropdowns() {
+      const yearSel = document.getElementById('birthYear');
+      const monthSel = document.getElementById('birthMonth');
+      const daySel = document.getElementById('birthDay');
+      const currentYear = new Date().getFullYear();
+
+      yearSel.innerHTML = '';
+      for (let y = currentYear; y >= 1960; y--) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = `${y}年`;
+        if (y === 2000) opt.selected = true;
+        yearSel.appendChild(opt);
+      }
+
+      monthSel.innerHTML = '';
+      for (let m = 1; m <= 12; m++) {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = `${m}月`;
+        monthSel.appendChild(opt);
+      }
+
+      daySel.innerHTML = '';
+      for (let d = 1; d <= 31; d++) {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = `${d}日`;
+        daySel.appendChild(opt);
+      }
+    }
+
+    function init() {
+      initBirthdayDropdowns();
+      if (!profile) {
+        document.getElementById('startModal').classList.remove('hidden');
+      } else {
+        document.getElementById('startModal').classList.add('hidden');
+        applyProfile();
+      }
+      renderList();
+    }
+
+    // --- Profile Setup ---
+    window.openSetup = () => {
+      if (profile) {
+        document.getElementById('inputName').value = profile.name;
+        document.getElementById('birthYear').value = profile.birthYear;
+        document.getElementById('birthMonth').value = profile.birthMonth;
+        document.getElementById('birthDay').value = profile.birthDay;
+        document.getElementById('inputTargetAge').value = profile.targetAge;
+      }
+      document.getElementById('startModal').classList.remove('hidden');
+    };
+
+    document.getElementById('profileForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      profile = {
+        name: document.getElementById('inputName').value.trim(),
+        birthYear: parseInt(document.getElementById('birthYear').value, 10),
+        birthMonth: parseInt(document.getElementById('birthMonth').value, 10),
+        birthDay: parseInt(document.getElementById('birthDay').value, 10),
+        targetAge: parseInt(document.getElementById('inputTargetAge').value, 10)
+      };
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      document.getElementById('startModal').classList.add('hidden');
+      applyProfile();
+      renderList();
+    });
+
+    function getBirthDate() {
+      if (!profile) return new Date(2000, 0, 1);
+      return new Date(profile.birthYear, profile.birthMonth - 1, profile.birthDay);
+    }
+
+    function applyProfile() {
+      document.getElementById('headerUserTitle').textContent = `${profile.name} の目標リスト`;
+      document.getElementById('countdownLabel').textContent = `${profile.targetAge}歳まで残り時間`;
+
+      const birth = getBirthDate();
+      const now = new Date();
+      let age = now.getFullYear() - birth.getFullYear();
+      const m = now.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+      document.getElementById('headerAgeInfo').textContent = `現在 ${age}歳 → 最終目標 ${profile.targetAge}歳`;
+
+      if (timerId) clearInterval(timerId);
+      updateCountdown();
+      timerId = setInterval(updateCountdown, 1000);
+    }
+
+    function updateCountdown() {
+      if (!profile) return;
+      const birth = getBirthDate();
+      const target = new Date(
+        birth.getFullYear() + profile.targetAge,
+        birth.getMonth(),
+        birth.getDate(),
+        0, 0, 0
+      );
+      const diff = target - new Date();
+      if (diff <= 0) {
+        document.getElementById('cdDays').textContent = '0';
+        document.getElementById('cdHours').textContent = '00';
+        document.getElementById('cdMins').textContent = '00';
+        document.getElementById('cdSecs').textContent = '00';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / 1000 / 60) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('cdDays').textContent = days.toLocaleString();
+      document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('cdMins').textContent = String(mins).padStart(2, '0');
+      document.getElementById('cdSecs').textContent = String(secs).padStart(2, '0');
+    }
+
+    // --- Backup Export & Import ---
+    window.exportBackup = () => {
+      const backupData = {
+        exportedAt: new Date().toISOString(),
+        profile,
+        items
+      };
+      const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const dateStr = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `bucket_list_backup_${dateStr}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    window.importBackup = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.profile) {
+            profile = data.profile;
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+          }
+          if (Array.isArray(data.items)) {
+            items = data.items;
+            localStorage.setItem(ITEMS_KEY, JSON.stringify(items));
+          }
+          alert('データの復元が完了しました！');
+          document.getElementById('startModal').classList.add('hidden');
+          if (profile) applyProfile();
+          renderList();
+        } catch (err) {
+          alert('ファイルの読み込みに失敗しました。正しいバックアップファイルを選択してください。');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    };
+
+    // --- Urgency Calculation ---
+    function getDeadlineInfo(itemTargetAge) {
+      const birth = getBirthDate();
+      const deadline = new Date(birth.getFullYear() + itemTargetAge, birth.getMonth(), birth.getDate());
+      const now = new Date();
+      const diffMs = deadline - now;
+      const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+      let color = '#38bdf8';
+      let bgTint = 'rgba(22, 31, 51, 1)';
+      let label = `${itemTargetAge}歳まで（あと${daysLeft.toLocaleString()}日）`;
+
+      if (daysLeft <= 0) {
+        color = '#ef4444';
+        bgTint = 'rgba(239, 68, 68, 0.14)';
+        label = `${itemTargetAge}歳まで（期限超過！）`;
+      } else if (daysLeft <= 180) {
+        color = '#f87171';
+        bgTint = 'rgba(248, 113, 113, 0.12)';
+        label = `${itemTargetAge}歳まで（緊急・あと${daysLeft}日）`;
+      } else if (daysLeft <= 365) {
+        color = '#fb923c';
+        bgTint = 'rgba(251, 146, 60, 0.09)';
+        label = `${itemTargetAge}歳まで（あと${daysLeft}日）`;
+      } else if (daysLeft <= 730) {
+        color = '#fbbf24';
+        bgTint = 'rgba(251, 191, 36, 0.05)';
+      }
+
+      return { daysLeft, color, bgTint, label };
+    }
+
+    function renderStars(level) {
+      const lv = Math.min(Math.max(parseInt(level, 10) || 3, 1), 5);
+      return '★'.repeat(lv) + '☆'.repeat(5 - lv);
+    }
+
+    // --- Add Item Modal ---
+    window.openAddModal = () => {
+      if (profile) {
+        document.getElementById('newTargetAge').value = profile.targetAge;
+      }
+      document.getElementById('addModal').classList.remove('hidden');
+      document.getElementById('newTitle').focus();
+    };
+    window.closeAddModal = () => {
+      document.getElementById('addModal').classList.add('hidden');
+      document.getElementById('addItemForm').reset();
+    };
+
+    document.getElementById('addItemForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      items.push({
+        id: Date.now(),
+        category: document.getElementById('newCategory').value,
+        title: document.getElementById('newTitle').value.trim(),
+        targetAge: parseInt(document.getElementById('newTargetAge').value, 10),
+        difficulty: parseInt(document.getElementById('newDifficulty').value, 10),
+        memo: document.getElementById('newMemo').value.trim(),
+        done: false,
+        open: false
+      });
+      closeAddModal();
+      saveAndRender();
+    });
+
+    // --- List & Ring Rendering ---
+    function saveAndRender() {
+      localStorage.setItem(ITEMS_KEY, JSON.stringify(items));
+      renderList();
+    }
+
+    function renderList() {
+      const area = document.getElementById('listScrollArea');
+      area.innerHTML = '';
+
+      if (items.length === 0) {
+        area.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size: 1.5rem; margin-bottom: 6px;">🎯</div>
+            <div>まだリストに項目がありません</div>
+            <div style="font-size: 0.8rem; margin-top: 4px;">下の「＋ 新しい項目を追加」から目標を登録しましょう</div>
+          </div>
+        `;
+        updateRing();
+        return;
+      }
+
+      const sortedItems = [...items].sort((a, b) => {
+        if (a.done !== b.done) return a.done ? 1 : -1;
+        const infoA = getDeadlineInfo(a.targetAge || 30);
+        const infoB = getDeadlineInfo(b.targetAge || 30);
+        return infoA.daysLeft - infoB.daysLeft;
+      });
+
+      sortedItems.forEach(item => {
+        const targetAge = item.targetAge || 30;
+        const difficulty = item.difficulty || 3;
+        const deadlineInfo = getDeadlineInfo(targetAge);
+        const hasMemo = item.memo && item.memo.trim().length > 0;
+
+        const categoryOptions = CATEGORIES.map(cat =>
+          `<option value="${cat}" ${item.category === cat ? 'selected' : ''}>${cat}</option>`
+        ).join('');
+
+        const el = document.createElement('div');
+        el.className = `list-item ${item.done ? 'done' : ''}`;
+        if (!item.done) {
+          el.style.setProperty('--urgency-color', deadlineInfo.color);
+          el.style.backgroundColor = deadlineInfo.bgTint;
+          el.style.borderColor = deadlineInfo.daysLeft <= 365 ? deadlineInfo.color : 'var(--border)';
+        }
+
+        el.innerHTML = `
+          <div class="item-row" onclick="toggleDrawer(${item.id})">
+            <input type="checkbox" class="item-checkbox" ${item.done ? 'checked' : ''} onclick="event.stopPropagation(); toggleDone(${item.id})">
+            <div class="item-content">
+              <div class="item-title-line">
+                <span class="item-title">${escapeHtml(item.title)}</span>
+                <span class="deadline-badge">${item.done ? '達成済み' : deadlineInfo.label}</span>
+              </div>
+              <div class="item-meta">
+                <span class="difficulty-stars" title="難易度 ${difficulty}/5">${renderStars(difficulty)}</span>
+                <span>・${escapeHtml(item.category)}</span>
+                ${hasMemo ? '<span class="memo-indicator">・📝 メモあり</span>' : ''}
+              </div>
+            </div>
+          </div>
+          <div class="item-drawer ${item.open ? 'open' : ''}">
+            <div class="drawer-controls">
+              <label class="drawer-control-item">
+                期限:
+                <input type="number" min="1" max="120" value="${targetAge}" onchange="updateItemField(${item.id}, 'targetAge', parseInt(this.value, 10))">
+                歳まで
+              </label>
+              <label class="drawer-control-item">
+                難易度:
+                <select onchange="updateItemField(${item.id}, 'difficulty', parseInt(this.value, 10))">
+                  <option value="1" ${difficulty === 1 ? 'selected' : ''}>★1</option>
+                  <option value="2" ${difficulty === 2 ? 'selected' : ''}>★2</option>
+                  <option value="3" ${difficulty === 3 ? 'selected' : ''}>★3</option>
+                  <option value="4" ${difficulty === 4 ? 'selected' : ''}>★4</option>
+                  <option value="5" ${difficulty === 5 ? 'selected' : ''}>★5</option>
+                </select>
+              </label>
+              <label class="drawer-control-item">
+                分類:
+                <select onchange="updateItemField(${item.id}, 'category', this.value)">
+                  ${categoryOptions}
+                </select>
+              </label>
+            </div>
+            <textarea placeholder="メモ書きや詳細を記録..." onchange="updateItemField(${item.id}, 'memo', this.value)">${escapeHtml(item.memo || '')}</textarea>
+            <div class="drawer-footer">
+              <button class="btn-delete" onclick="deleteItem(${item.id})">この項目を削除</button>
+            </div>
+          </div>
+        `;
+        area.appendChild(el);
+      });
+
+      updateRing();
+    }
+
+    function updateRing() {
+      const total = items.length;
+      const done = items.filter(i => i.done).length;
+      const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+      const circumference = 565.48;
+      const offset = circumference - (percent / 100) * circumference;
+
+      document.getElementById('ringBar').style.strokeDashoffset = offset;
+      document.getElementById('ringPercent').textContent = `${percent}%`;
+      document.getElementById('ringFraction').textContent = `${done} / ${total} 達成`;
+      document.getElementById('listCountLabel').textContent = `全 ${total} 件`;
+
+      const msg = document.getElementById('ringMessage');
+      if (total === 0) {
+        msg.textContent = '下の「＋」ボタンから最初の目標を追加しよう';
+      } else if (percent === 100) {
+        msg.textContent = 'すべての目標を達成しました！';
+      } else if (percent >= 50) {
+        msg.textContent = '折り返し地点を突破！その調子です';
+      } else {
+        msg.textContent = '項目をクリックすると期限・難易度・メモを編集できます';
+      }
+    }
+
+    window.toggleDone = (id) => {
+      items = items.map(i => i.id === id ? { ...i, done: !i.done } : i);
+      saveAndRender();
+    };
+
+    window.toggleDrawer = (id) => {
+      items = items.map(i => i.id === id ? { ...i, open: !i.open } : i);
+      saveAndRender();
+    };
+
+    window.updateItemField = (id, field, value) => {
+      items = items.map(i => i.id === id ? { ...i, [field]: value } : i);
+      saveAndRender();
+    };
+
+    window.deleteItem = (id) => {
+      items = items.filter(i => i.id !== id);
+      saveAndRender();
+    };
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    init();
+  </script>
+</body>
+</html>
